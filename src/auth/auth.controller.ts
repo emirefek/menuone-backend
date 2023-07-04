@@ -1,0 +1,43 @@
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
+import { AuthService } from "./auth.service";
+import { LoginDto } from "./dto/login.dto";
+import { RegisterDto } from "./dto/signup.dto";
+import { AuthGuard } from "./auth.guard";
+import { User } from "./decorators/user.decorator";
+import { IJwtPayload } from "./interfaces/jwt.interface";
+
+@Controller("auth")
+export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  @Post("login")
+  async login(@Body() loginDto: LoginDto) {
+    const response = await this.authService.login(
+      loginDto.email,
+      loginDto.password,
+    );
+    if (!response) {
+      throw new NotFoundException("User not found");
+    }
+    return response;
+  }
+
+  @Post("register")
+  async register(@Body() registerDto: RegisterDto) {
+    const response = await this.authService.register(registerDto);
+    return response;
+  }
+
+  @UseGuards(AuthGuard)
+  @Get("details")
+  async details(@User() user: IJwtPayload) {
+    return user;
+  }
+}
