@@ -38,14 +38,22 @@ export const regionEnum = pgEnum("region", [
   ...Object.keys(REGION_CODES),
 ]);
 
-export const restaurants = pgTable("restaurants", {
-  id: uuid("id")
-    .primaryKey()
-    .default(sql`uuid_generate_v4()`),
-  name: text("name").notNull(),
-  alias: text("alias").notNull(),
-  region: regionEnum("region").notNull(),
-});
+export const restaurants = pgTable(
+  "restaurants",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`uuid_generate_v4()`),
+    name: text("name").notNull(),
+    alias: text("alias").notNull(),
+    region: regionEnum("region").notNull(),
+  },
+  (restaurants) => {
+    return {
+      aliasIndex: uniqueIndex("alias_idx").on(restaurants.alias),
+    };
+  },
+);
 export type Restaurant = InferModel<typeof restaurants>;
 
 export const restaurantsRelations = relations(restaurants, ({ many }) => ({

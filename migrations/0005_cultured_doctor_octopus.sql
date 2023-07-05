@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS "alias_idx" ON "restaurants" ("alias");
