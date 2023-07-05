@@ -18,7 +18,10 @@ async function main() {
 }
 
 main()
-  .catch(console.error)
+  .catch((e) => console.error(e))
+  .then((e) => {
+    console.log(e);
+  })
   .finally(() => {
     client.end();
   });

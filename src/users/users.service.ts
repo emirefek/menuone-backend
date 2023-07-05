@@ -7,7 +7,6 @@ import { eq } from "drizzle-orm";
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [];
   constructor(@Inject(PG_CONNECTION) private conn: DrizzleClient) {}
 
   async create(user: User): Promise<User> {

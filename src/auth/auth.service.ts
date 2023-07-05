@@ -21,7 +21,11 @@ export class AuthService {
       password: await hash(user.password),
     };
     const resp = await this.usersService.create(data);
-    return { ...resp };
+    return {
+      id: resp.id,
+      name: resp.name,
+      email: resp.email,
+    };
   }
 
   async login(email: string, password: string) {
