@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  HttpException,
   Param,
   Patch,
   Post,
@@ -24,17 +25,25 @@ export class CategoryController {
     @User() user: IJwtPayload,
     @Body() createBody: CreateCategoryDto,
   ) {
-    return await this.categoryService.create(
-      user.id,
-      createBody.restaurantId,
-      createBody.name,
-    );
+    try {
+      return await this.categoryService.create(
+        user.id,
+        createBody.restaurantId,
+        createBody.name,
+      );
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
   }
 
   @UseGuards(AuthGuard)
   @Delete(":id/delete")
   async delete(@User() user: IJwtPayload, @Param("id") id: string) {
-    return await this.categoryService.delete(user.id, id);
+    try {
+      return await this.categoryService.delete(user.id, id);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
   }
 
   @UseGuards(AuthGuard)
@@ -44,6 +53,10 @@ export class CategoryController {
     @Param("id") id: string,
     @Body() body: UpdateCategoryDto,
   ) {
-    return await this.categoryService.update(user.id, id, body);
+    try {
+      return await this.categoryService.update(user.id, id, body);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
   }
 }
