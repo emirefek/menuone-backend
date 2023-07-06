@@ -8,6 +8,7 @@ import { DrizzleModule } from "./drizzle/drizzle.module";
 import { RedisModule } from "./redis/redis.module";
 import { TabsModule } from "./tabs/tabs.module";
 import { RestaurantModule } from "./restaurant/restaurant.module";
+import { CategoryModule } from "./category/category.module";
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RestaurantModule } from "./restaurant/restaurant.module";
     RedisModule,
     TabsModule,
     RestaurantModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [

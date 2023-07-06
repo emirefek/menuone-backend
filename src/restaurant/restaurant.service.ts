@@ -4,6 +4,7 @@ import { PG_CONNECTION } from "src/constants";
 import { DrizzleClient } from "src/drizzle/drizzle.interface";
 import {
   Restaurant,
+  categories,
   restaurants,
   usersToManager,
   usersToStaff,
@@ -80,7 +81,41 @@ export class RestaurantService {
   }
 
   async getOne(userId: string, restaurantId: string) {
-    return "This will return spesific one restaurant";
+    const restResp = await this.db
+      .select()
+      .from(restaurants)
+      .where(eq(restaurants.id, restaurantId))
+      .leftJoin(usersToManager, eq(usersToManager.restaurantId, restaurants.id))
+      .leftJoin(usersToStaff, eq(usersToStaff.restaurantId, restaurants.id));
+
+    if (
+      restResp.length !== 1 &&
+      (restResp[0].users_to_manager === null ||
+        restResp[0].users_to_staff === null)
+    ) {
+      throw new Error("Restaurant not found");
+    }
+
+    const categoriesResp = await this.db
+      .select()
+      .from(categories)
+      .where(eq(categories.restaurantId, restaurantId));
+
+    let categoriesArr = categoriesResp.map((c) => {
+      return {
+        id: c.id,
+        name: c.name,
+        index: c.index,
+      };
+    });
+    categoriesArr = categoriesArr.sort((a, b) => {
+      return a.index - b.index;
+    });
+
+    return {
+      ...restResp[0].restaurants,
+      categories: categoriesArr,
+    };
   }
 
   async update() {

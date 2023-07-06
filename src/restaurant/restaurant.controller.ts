@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpException,
+  Param,
   Post,
   UseGuards,
 } from "@nestjs/common";
@@ -39,7 +40,11 @@ export class RestaurantController {
 
   @UseGuards(AuthGuard)
   @Get(":id")
-  getOne() {
-    return "This will return spesific one restaurant of user";
+  async getOne(@Param("id") id: string, @User() user: IJwtPayload) {
+    try {
+      return await this.restaurantService.getOne(user.id, id);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
   }
 }
