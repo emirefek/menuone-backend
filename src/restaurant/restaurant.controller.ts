@@ -6,12 +6,15 @@ import {
   Param,
   Post,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 import { AuthGuard } from "src/auth/auth.guard";
 import { RestaurantService } from "./restaurant.service";
 import { User } from "src/auth/decorators/user.decorator";
 import { IJwtPayload } from "src/auth/interfaces/jwt.interface";
+import { SentryInterceptor } from "src/sentry/sentry.interceptor";
 
+@UseInterceptors(SentryInterceptor)
 @Controller("restaurant")
 export class RestaurantController {
   constructor(private restaurantService: RestaurantService) {}

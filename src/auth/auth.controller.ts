@@ -5,6 +5,7 @@ import {
   NotFoundException,
   Post,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LoginDto } from "./dto/login.dto";
@@ -12,7 +13,9 @@ import { RegisterDto } from "./dto/signup.dto";
 import { AuthGuard } from "./auth.guard";
 import { User } from "./decorators/user.decorator";
 import { IJwtPayload } from "./interfaces/jwt.interface";
+import { SentryInterceptor } from "src/sentry/sentry.interceptor";
 
+@UseInterceptors(SentryInterceptor)
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
