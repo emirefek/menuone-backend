@@ -9,6 +9,12 @@ import { RedisModule } from "./redis/redis.module";
 import { TabsModule } from "./tabs/tabs.module";
 import { RestaurantModule } from "./restaurant/restaurant.module";
 import { CategoryModule } from "./category/category.module";
+import { SocketService } from "./socket/socket.service";
+import { RedisocketPropagatorService } from "./redisocket-propagator/redisocket-propagator.service";
+import { RedisocketPropagatorModule } from "./redisocket-propagator/redisocket-propagator.module";
+import { SocketModule } from "./socket/socket.module";
+import { EventModule } from "./event/event.module";
+import { TableModule } from './table/table.module';
 
 @Module({
   imports: [
@@ -23,6 +29,10 @@ import { CategoryModule } from "./category/category.module";
     TabsModule,
     RestaurantModule,
     CategoryModule,
+    RedisocketPropagatorModule,
+    SocketModule,
+    EventModule,
+    TableModule,
   ],
   controllers: [AppController],
   providers: [
@@ -36,6 +46,9 @@ import { CategoryModule } from "./category/category.module";
         });
       },
     },
+    SocketService,
+    RedisocketPropagatorService,
+    EventModule,
   ],
 })
 export class AppModule {}

@@ -1,11 +1,7 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsUUID } from "class-validator";
 
 export class CreateKeyDto {
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
-  key: string;
-
-  @IsString()
-  @IsNotEmpty()
-  value: string;
+  restaurantId: string;
 }

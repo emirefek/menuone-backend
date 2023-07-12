@@ -98,4 +98,14 @@ export class CategoryService {
 
     return updateResp[0];
   }
+
+  async categoriesOfRestaurant(restaurantId: string) {
+    const categoryResp = await this.db
+      .select()
+      .from(categories)
+      .where(eq(categories.restaurantId, restaurantId))
+      .orderBy(categories.index);
+
+    return categoryResp;
+  }
 }

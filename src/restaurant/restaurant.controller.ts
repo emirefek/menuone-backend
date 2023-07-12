@@ -45,7 +45,7 @@ export class RestaurantController {
   @Get(":id")
   async getOne(@Param("id") id: string, @User() user: IJwtPayload) {
     try {
-      return await this.restaurantService.getOne(user.id, id);
+      return await this.restaurantService.getOneWithCategories(user.id, id);
     } catch (error) {
       throw new HttpException(error.message, 500);
     }

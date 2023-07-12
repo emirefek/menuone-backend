@@ -8,10 +8,10 @@ export class TabsController {
 
   @Post("create")
   async create(@Body() body: CreateKeyDto) {
-    return this.tabsService.create(body.key, body.value);
+    return this.tabsService.create(body.restaurantId);
   }
 
-  @Get("get/:key")
+  @Get(":id/get")
   async get(@Param("key") key: string) {
     return this.tabsService.get(key);
   }

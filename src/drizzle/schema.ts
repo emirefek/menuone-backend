@@ -8,6 +8,8 @@ import {
   integer,
   timestamp,
   pgEnum,
+  jsonb,
+  real,
 } from "drizzle-orm/pg-core";
 import { REGION_CODES } from "src/constants";
 
@@ -140,6 +142,34 @@ export const tablesRelations = relations(tables, ({ one }) => ({
     references: [restaurants.id],
   }),
 }));
+export type Table = InferModel<typeof tables>;
+
+export const tabs = pgTable("tabs", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`uuid_generate_v4()`),
+  tableId: uuid("table_id").notNull(),
+  startedAt: timestamp("started_at", { withTimezone: true }).notNull(),
+  closedAt: timestamp("closed_at", { withTimezone: true }),
+  orders: jsonb("orders")
+    .$type<
+      {
+        id: string;
+        name: string;
+        description: string | null;
+        price: number;
+      }[]
+    >()
+    .default([]),
+});
+export type Tab = InferModel<typeof tabs>;
+
+export const tabsRelations = relations(tabs, ({ one }) => ({
+  table: one(tables, {
+    fields: [tabs.tableId],
+    references: [tables.id],
+  }),
+}));
 
 export const categories = pgTable("categories", {
   id: uuid("id")
@@ -163,7 +193,7 @@ export const products = pgTable("products", {
     .default(sql`uuid_generate_v4()`),
   name: text("name").notNull(),
   description: text("description"),
-  price: integer("price").notNull(),
+  price: real("price").notNull(),
   index: integer("index").notNull(),
   categoryId: uuid("category_id").notNull(),
 });

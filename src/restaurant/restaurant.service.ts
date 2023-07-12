@@ -1,19 +1,24 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
+import { CategoryService } from "src/category/category.service";
 import { PG_CONNECTION } from "src/constants";
 import { DrizzleClient } from "src/drizzle/drizzle.interface";
 import {
   Restaurant,
-  categories,
   restaurants,
   usersToManager,
   usersToStaff,
 } from "src/drizzle/schema";
+import { TableService } from "src/table/table.service";
 import { uuid } from "src/utils/uuid";
 
 @Injectable()
 export class RestaurantService {
-  constructor(@Inject(PG_CONNECTION) private db: DrizzleClient) {}
+  constructor(
+    @Inject(PG_CONNECTION) private db: DrizzleClient,
+    private categoryService: CategoryService,
+    private tableService: TableService,
+  ) {}
 
   async create(userId: string, restaurant: Omit<Restaurant, "id">) {
     const id = uuid();
@@ -96,29 +101,65 @@ export class RestaurantService {
       throw new Error("Restaurant not found");
     }
 
-    const categoriesResp = await this.db
-      .select()
-      .from(categories)
-      .where(eq(categories.restaurantId, restaurantId));
+    return restResp[0].restaurants;
+  }
 
-    let categoriesArr = categoriesResp.map((c) => {
+  async getOneWithCategories(userId: string, restaurantId: string) {
+    const restResp = await this.db
+      .select()
+      .from(restaurants)
+      .where(eq(restaurants.id, restaurantId))
+      .leftJoin(usersToManager, eq(usersToManager.restaurantId, restaurants.id))
+      .leftJoin(usersToStaff, eq(usersToStaff.restaurantId, restaurants.id));
+
+    if (
+      restResp.length !== 1 &&
+      (restResp[0].users_to_manager === null ||
+        restResp[0].users_to_staff === null)
+    ) {
+      throw new Error("Restaurant not found");
+    }
+
+    const categoriesResp = await this.categoryService.categoriesOfRestaurant(
+      restaurantId,
+    );
+
+    const categoriesArray = categoriesResp.map((c) => {
       return {
         id: c.id,
         name: c.name,
         index: c.index,
       };
     });
-    categoriesArr = categoriesArr.sort((a, b) => {
-      return a.index - b.index;
-    });
+
+    const tablesResp = await this.tableService.tablesOfRestaurant(restaurantId);
 
     return {
       ...restResp[0].restaurants,
-      categories: categoriesArr,
+      categories: categoriesArray,
+      tables: tablesResp,
     };
   }
 
   async update() {
-    return "This will update restaurant";
+    throw new Error("NOT IMPLEMENTED");
+  }
+
+  async isUserManager(userId: string, restaurantId: string): Promise<boolean> {
+    const dbResp = await this.db
+      .select()
+      .from(usersToManager)
+      .where(
+        and(
+          eq(usersToManager.userId, userId),
+          eq(usersToManager.restaurantId, restaurantId),
+        ),
+      );
+
+    if (dbResp.length > 0) {
+      return true;
+    }
+
+    return false;
   }
 }

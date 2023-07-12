@@ -3,6 +3,8 @@ import { AppModule } from "./app.module";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { ConfigService } from "@nestjs/config";
 import * as Sentry from "@sentry/node";
+// import { WsAdapter } from "@nestjs/platform-ws";
+import { initAdapters } from "./init.adapters";
 
 process.title = "menudrop-backend";
 
@@ -19,6 +21,8 @@ async function bootstrap() {
 
   const port = configService.get("PORT") || 3000;
   console.log(`Listening on port ${port}`);
+  initAdapters(mainBackend);
+  //  mainBackend.useWebSocketAdapter(new WsAdapter(mainBackend));
   await mainBackend.listen(port);
 }
 bootstrap();

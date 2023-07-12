@@ -43,6 +43,20 @@
       "when": 1688595647727,
       "tag": "0005_cultured_doctor_octopus",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1689195051283,
+      "tag": "0006_wakeful_typhoid_mary",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1689198135158,
+      "tag": "0007_modern_infant_terrible",
+      "breakpoints": true
     }
   ]
 }
