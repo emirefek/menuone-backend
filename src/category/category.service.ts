@@ -136,8 +136,6 @@ export class CategoryService {
       throw new Error("Category not found");
     }
 
-    console.log(categoryResp);
-
     const productsArr: Product[] = [];
 
     const category = categoryResp[0].categories;

@@ -135,8 +135,6 @@ export class RestaurantService {
         ),
       );
 
-    console.log(restResp);
-
     if (
       restResp.length !== 1 &&
       (restResp[0].users_to_manager === null ||
