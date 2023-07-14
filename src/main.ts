@@ -21,6 +21,9 @@ async function bootstrap() {
 
   const port = configService.get("PORT") || 4000;
   console.log(`Listening on port ${port}`);
+  mainBackend.enableCors({
+    origin: "*",
+  });
   initAdapters(mainBackend);
   //  mainBackend.useWebSocketAdapter(new WsAdapter(mainBackend));
   await mainBackend.listen(port);
