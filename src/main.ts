@@ -19,7 +19,7 @@ async function bootstrap() {
     environment: configService.get("SENTRY_ENVIRONMENT"),
   });
 
-  const port = configService.get("PORT") || 3000;
+  const port = configService.get("PORT") || 4000;
   console.log(`Listening on port ${port}`);
   initAdapters(mainBackend);
   //  mainBackend.useWebSocketAdapter(new WsAdapter(mainBackend));
