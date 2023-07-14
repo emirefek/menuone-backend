@@ -54,7 +54,6 @@ export class RestaurantService {
   }
 
   async getAll(userId: string) {
-    // return "This will return all restaurants of user";
     const respManager = await this.db
       .select()
       .from(usersToManager)
@@ -90,8 +89,20 @@ export class RestaurantService {
       .select()
       .from(restaurants)
       .where(eq(restaurants.id, restaurantId))
-      .leftJoin(usersToManager, eq(usersToManager.restaurantId, restaurants.id))
-      .leftJoin(usersToStaff, eq(usersToStaff.restaurantId, restaurants.id));
+      .leftJoin(
+        usersToManager,
+        and(
+          eq(usersToManager.userId, userId),
+          eq(usersToManager.restaurantId, restaurants.id),
+        ),
+      )
+      .leftJoin(
+        usersToStaff,
+        and(
+          eq(usersToManager.userId, userId),
+          eq(usersToStaff.restaurantId, restaurants.id),
+        ),
+      );
 
     if (
       restResp.length !== 1 &&
@@ -109,8 +120,22 @@ export class RestaurantService {
       .select()
       .from(restaurants)
       .where(eq(restaurants.id, restaurantId))
-      .leftJoin(usersToManager, eq(usersToManager.restaurantId, restaurants.id))
-      .leftJoin(usersToStaff, eq(usersToStaff.restaurantId, restaurants.id));
+      .leftJoin(
+        usersToManager,
+        and(
+          eq(usersToManager.userId, userId),
+          eq(usersToManager.restaurantId, restaurants.id),
+        ),
+      )
+      .leftJoin(
+        usersToStaff,
+        and(
+          eq(usersToStaff.userId, userId),
+          eq(usersToStaff.restaurantId, restaurants.id),
+        ),
+      );
+
+    console.log(restResp);
 
     if (
       restResp.length !== 1 &&

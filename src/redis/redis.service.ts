@@ -53,7 +53,7 @@ export class RedisService {
     });
   }
 
-  public async get(key: string): Promise<unknown> {
+  public async get(key: string): Promise<string | null> {
     const value = await this.redisClient.get(key);
 
     return value;
@@ -65,5 +65,11 @@ export class RedisService {
   ): Promise<string> {
     const result = await this.redisClient.set(key, value);
     return result;
+  }
+
+  public async del(key: string): Promise<unknown> {
+    const response = await this.redisClient.del(key);
+
+    return response;
   }
 }

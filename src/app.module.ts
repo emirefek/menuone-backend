@@ -15,6 +15,7 @@ import { RedisocketPropagatorModule } from "./redisocket-propagator/redisocket-p
 import { SocketModule } from "./socket/socket.module";
 import { EventModule } from "./event/event.module";
 import { TableModule } from './table/table.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { TableModule } from './table/table.module';
     SocketModule,
     EventModule,
     TableModule,
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [

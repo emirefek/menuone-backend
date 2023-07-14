@@ -12,6 +12,7 @@ import {
   real,
 } from "drizzle-orm/pg-core";
 import { REGION_CODES } from "src/constants";
+import { OrderStatusEnum } from "src/tabs/dto/order.dto";
 
 export const users = pgTable(
   "users",
@@ -155,11 +156,15 @@ export const tabs = pgTable("tabs", {
     .$type<
       {
         id: string;
+        productId: string;
         name: string;
         description: string | null;
         price: number;
+        status: OrderStatusEnum;
+        clientToken: string;
       }[]
     >()
+    .notNull()
     .default([]),
 });
 export type Tab = InferModel<typeof tabs>;
@@ -194,7 +199,7 @@ export const products = pgTable("products", {
   name: text("name").notNull(),
   description: text("description"),
   price: real("price").notNull(),
-  index: integer("index").notNull(),
+  index: integer("index").notNull().default(0),
   categoryId: uuid("category_id").notNull(),
 });
 export const productsRelations = relations(products, ({ one }) => ({
