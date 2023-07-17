@@ -1,7 +1,9 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
+  HttpCode,
   NotFoundException,
   Post,
   UseGuards,
@@ -21,13 +23,14 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post("login")
+  @HttpCode(200)
   async login(@Body() loginDto: LoginDto) {
     const response = await this.authService.login(
       loginDto.email,
       loginDto.password,
     );
     if (!response) {
-      throw new NotFoundException("User not found");
+      throw new BadRequestException("ERR_AUTH_USER_NOT_FOUND");
     }
     return response;
   }
@@ -41,6 +44,6 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get("details")
   async details(@User() user: IJwtPayload) {
-    return user;
+    return this.authService.details;
   }
 }

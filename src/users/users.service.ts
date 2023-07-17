@@ -37,4 +37,13 @@ export class UsersService {
     const resp = await this.conn.select().from(users);
     return resp;
   }
+
+  async findOneById(id: string): Promise<User | undefined> {
+    const resp = await this.conn
+      .select()
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
+    return resp[0];
+  }
 }

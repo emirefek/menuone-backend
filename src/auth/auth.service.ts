@@ -46,4 +46,16 @@ export class AuthService {
       access_token: token,
     };
   }
+
+  async details(id: string) {
+    const user = await this.usersService.findOneById(id);
+    if (!user) {
+      return null;
+    }
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
+  }
 }
