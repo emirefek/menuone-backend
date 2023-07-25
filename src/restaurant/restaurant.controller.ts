@@ -4,6 +4,7 @@ import {
   Get,
   HttpException,
   Param,
+  Patch,
   Post,
   UseGuards,
   UseInterceptors,
@@ -44,6 +45,16 @@ export class RestaurantController {
   @UseGuards(AuthGuard)
   @Get(":id")
   async getOne(@Param("id") id: string, @User() user: IJwtPayload) {
+    try {
+      return await this.restaurantService.getOneWithCategories(user.id, id);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch(":id")
+  async patchOne(@Param("id") id: string, @User() user: IJwtPayload) {
     try {
       return await this.restaurantService.getOneWithCategories(user.id, id);
     } catch (error) {

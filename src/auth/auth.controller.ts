@@ -44,6 +44,14 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get("details")
   async details(@User() user: IJwtPayload) {
-    return this.authService.details;
+    try {
+      const userDetails = await this.authService.details(user.id);
+      if (!userDetails) {
+        throw new NotFoundException("ERR_USER_NOT_FOUND");
+      }
+      return userDetails;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 }
